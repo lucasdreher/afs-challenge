@@ -9,6 +9,44 @@
 import { Component, Vue } from "vue-property-decorator";
 import { TableData } from "@/types/types";
 
+//helper get totals
+const getTotals = (data: TableData[]) => {
+  const totalRow: any = {
+    // was totalRow: TableData
+    id: "42f246oo-49d0-4e91-8fe1-de2e656b0f06",
+    name: "Total",
+    nominalValue: 0,
+    authorizedAmount: 0,
+    issuedAmount: 0,
+    authorizedCapital: 0,
+    issuedCapital: 0,
+    randomNumber: Math.random(),
+  };
+
+  data.forEach((row) => {
+    for (let [key, value] of Object.entries(row)) {
+      switch (key) {
+        case "nominalValue":
+          totalRow[key] += value;
+          break;
+        case "authorizedAmount":
+          totalRow[key] += value;
+          break;
+        case "issuedAmount":
+          totalRow[key] += value;
+          break;
+        case "authorizedCapital":
+          totalRow[key] += value;
+          break;
+        case "issuedCapital":
+          totalRow[key] += value;
+          break;
+      }
+    }
+  });
+  return [...data, totalRow];
+};
+
 @Component
 export default class Home extends Vue {
   tableData: TableData[] = [];
@@ -36,34 +74,6 @@ export default class Home extends Vue {
   ];
   loading = false;
 
-  //helper get total
-  getTotals = (data: TableData[]) => {
-    let totalRow:any = {}
-    data.forEach(row => {
-      for (let [key, value] of Object.entries(row)) {
-        if (key === 'randomNumber') {
-          if (!totalRow[key]) {
-            totalRow[key] = Math.random();
-          }
-        }
-        else if (totalRow[key] && typeof totalRow[key] === 'number') {
-          totalRow[key] += value;
-        } else if (key === 'id') {
-          if (!totalRow[key]) {
-            totalRow[key] = '42f246oo-49d0-4e91-8fe1-de2e656b0f06';
-          }
-        } else if  (key === 'name') {
-          if (!totalRow[key]) {
-            totalRow[key] = 'Total';
-          }
-        } else {
-          totalRow[key] = value;
-        }
-      }
-    });
-    return [...data, totalRow];
-  }
-
   // mounted works fine if your ide complains about it
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   mounted() {
@@ -78,9 +88,7 @@ export default class Home extends Vue {
         });
       })
       .then((data: TableData[]) => {
-        this.tableData = this.getTotals(data);
-        
-        // console.log()
+        this.tableData = getTotals(data);
         this.loading = false;
       })
       .catch((error) => {
