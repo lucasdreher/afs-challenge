@@ -1,7 +1,15 @@
 <template>
   <div class="home">
+    <button>Add new security class</button>
     <h1>This is a table with some important data</h1>
     <b-table :data="tableData" :columns="columns"></b-table>
+    <div>
+      <b-button v-b-modal.modal-1>Launch demo modal</b-button>
+
+      <b-modal id="modal-1" title="BootstrapVue">
+        <p class="my-4">Hello from modal!</p>
+      </b-modal>
+    </div>
   </div>
 </template>
 
@@ -12,7 +20,7 @@ import { TableData } from "@/types/types";
 //helper get totals
 const getTotals = (data: TableData[]) => {
   const totalRow: any = {
-    // was totalRow: TableData
+    // TODO totalRow: TableData
     id: "42f246oo-49d0-4e91-8fe1-de2e656b0f06",
     name: "Total",
     nominalValue: 0,
@@ -76,24 +84,28 @@ export default class Home extends Vue {
 
   // mounted works fine if your ide complains about it
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  mounted() {
-    this.getData()
-      .then((data: TableData[]) => {
-        this.loading = true;
-        return data.map((dataItem: TableData) => {
-          return {
-            ...dataItem,
-            randomNumber: Math.random(),
-          };
-        });
-      })
-      .then((data: TableData[]) => {
-        this.tableData = getTotals(data);
-        this.loading = false;
-      })
-      .catch((error) => {
-        console.log(error, "This is not good");
+  async mounted(): Promise<void> {
+    const loading = (data: TableData[]) => {
+      this.loading = true;
+      return data.map((dataItem: TableData) => {
+        return {
+          ...dataItem,
+          randomNumber: Math.random(),
+        };
       });
+    };
+    const finishLoading = (data: TableData[]) => {
+      this.loading = false;
+      return getTotals(data);
+    };
+
+    try {
+      const data: TableData[] = await this.getData();
+      const loadedData: TableData[] = loading(data);
+      this.tableData = finishLoading(loadedData);
+    } catch (error) {
+      console.error(error, "This is not good");
+    }
   }
 
   async getData(): Promise<TableData[]> {
