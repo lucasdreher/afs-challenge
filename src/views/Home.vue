@@ -10,7 +10,65 @@
       <!-- use the modal component, pass in the prop -->
       <modal :show="showModal" @close="showModal = false">
         <template #header>
-          <h3>custom header</h3>
+          <h2>New security class</h2>
+        </template>
+        <template #body>
+          <form ref="newSecurityClassForm">
+            <label for="securityClassName">Security class name</label>
+            <input
+              id="securityClassName"
+              v-model="securityClassNameValue"
+              placeholder="Name"
+              type="text"
+              required
+            />
+
+            <label for="nominalValue">Nominal Value</label>
+            <input
+              id="nominalValue"
+              v-model="nominalValueValue"
+              placeholder="Amount"
+              type="number"
+              required
+            />
+
+            <label for="authorizedAmount">Authorized amount</label>
+            <input
+              id="authorizedAmount"
+              v-model="nominalValueValue"
+              placeholder="Amount"
+              type="number"
+              required
+            />
+
+            <label for="issuedAmount">Issued amount</label>
+            <input
+              id="issuedAmount"
+              v-model="nominalValueValue"
+              placeholder="Amount"
+              type="number"
+              required
+            />
+
+            <label for="authorizedCapital">Authorized Capital</label>
+            <input
+              id="authorizedCapital"
+              v-model="nominalValueValue"
+              placeholder="Amount"
+              type="number"
+              required
+            />
+
+            <label for="issuedCapital">Issued capital</label>
+            <input
+              id="issuedCapital"
+              v-model="nominalValueValue"
+              placeholder="Amount"
+              type="number"
+              required
+            />
+            <button type="submit">Submit</button>
+          </form>
         </template>
       </modal>
     </Teleport>
@@ -24,8 +82,7 @@ import Modal from "@/components/Modal.vue";
 
 const //helper get totals
   getTotals = (data: TableData[]) => {
-    const totalRow: any = {
-      // TODO totalRow: TableData
+    const totalRow: any | TableData = {
       id: "42f246oo-49d0-4e91-8fe1-de2e656b0f06",
       name: "Total",
       nominalValue: 0,

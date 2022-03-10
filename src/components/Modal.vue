@@ -21,10 +21,7 @@ export default {
 
           <div class="modal-footer">
             <slot name="footer">
-              default footer
-              <button class="modal-default-button" @click="$emit('close')">
-                OK
-              </button>
+              <button @click="$emit('close')">Close</button>
             </slot>
           </div>
         </div>
@@ -52,13 +49,22 @@ export default {
 }
 
 .modal-container {
-  width: 300px;
+  max-width: 300px;
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #fff;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
+}
+
+label,
+input {
+  display: block;
+}
+
+.modal-container input {
+  margin: 0 auto 10px;
 }
 
 .modal-header h3 {
