@@ -1,61 +1,75 @@
 <template>
   <div class="home">
-    <button>Add new security class</button>
+    <button id="show-modal" @click="showModal = true">
+      Add new security class
+    </button>
     <h1>This is a table with some important data</h1>
     <b-table :data="tableData" :columns="columns"></b-table>
-    <div>
-      <b-button v-b-modal.modal-1>Launch demo modal</b-button>
 
-      <b-modal id="modal-1" title="BootstrapVue">
-        <p class="my-4">Hello from modal!</p>
-      </b-modal>
-    </div>
+    <Teleport to="body">
+      <!-- use the modal component, pass in the prop -->
+      <modal :show="showModal" @close="showModal = false">
+        <template #header>
+          <h3>custom header</h3>
+        </template>
+      </modal>
+    </Teleport>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { TableData } from "@/types/types";
+import Modal from "@/components/Modal.vue";
 
-//helper get totals
-const getTotals = (data: TableData[]) => {
-  const totalRow: any = {
-    // TODO totalRow: TableData
-    id: "42f246oo-49d0-4e91-8fe1-de2e656b0f06",
-    name: "Total",
-    nominalValue: 0,
-    authorizedAmount: 0,
-    issuedAmount: 0,
-    authorizedCapital: 0,
-    issuedCapital: 0,
-    randomNumber: Math.random(),
+const //helper get totals
+  getTotals = (data: TableData[]) => {
+    const totalRow: any = {
+      // TODO totalRow: TableData
+      id: "42f246oo-49d0-4e91-8fe1-de2e656b0f06",
+      name: "Total",
+      nominalValue: 0,
+      authorizedAmount: 0,
+      issuedAmount: 0,
+      authorizedCapital: 0,
+      issuedCapital: 0,
+      randomNumber: Math.random(),
+    };
+
+    data.forEach((row) => {
+      for (let [key, value] of Object.entries(row)) {
+        switch (key) {
+          case "nominalValue":
+            totalRow[key] += value;
+            break;
+          case "authorizedAmount":
+            totalRow[key] += value;
+            break;
+          case "issuedAmount":
+            totalRow[key] += value;
+            break;
+          case "authorizedCapital":
+            totalRow[key] += value;
+            break;
+          case "issuedCapital":
+            totalRow[key] += value;
+            break;
+        }
+      }
+    });
+    return [...data, totalRow];
   };
 
-  data.forEach((row) => {
-    for (let [key, value] of Object.entries(row)) {
-      switch (key) {
-        case "nominalValue":
-          totalRow[key] += value;
-          break;
-        case "authorizedAmount":
-          totalRow[key] += value;
-          break;
-        case "issuedAmount":
-          totalRow[key] += value;
-          break;
-        case "authorizedCapital":
-          totalRow[key] += value;
-          break;
-        case "issuedCapital":
-          totalRow[key] += value;
-          break;
-      }
-    }
-  });
-  return [...data, totalRow];
-};
-
-@Component
+@Component({
+  components: {
+    Modal,
+  },
+  data() {
+    return {
+      showModal: false,
+    };
+  },
+})
 export default class Home extends Vue {
   tableData: TableData[] = [];
   columns = [
