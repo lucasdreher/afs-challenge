@@ -37,7 +37,9 @@ export default class Transfers extends Vue {
       const searchArray: Transaction[] = [];
       this.transfers.forEach((transfer: Transaction) => {
         if (
-          transfer.type.toLowerCase().includes(this.searchTerms.toLowerCase())
+          transfer.recordDate
+            .toLowerCase()
+            .includes(this.searchTerms.toLowerCase())
         ) {
           searchArray.push(transfer);
         }
@@ -49,7 +51,10 @@ export default class Transfers extends Vue {
 
   updateTransfers(): void {
     this.transfers.forEach((transfer) => {
-      transfer.forgottenProperty = `Important data: ${(Math.random() * 100000000).toString().slice(1, 8)}`;
+      const number = `Important data: ${(Math.random() * 100000000)
+        .toString()
+        .slice(1, 8)}`;
+      transfer.forgottenProperty = number;
     });
 
     this.transfers[0] = {
