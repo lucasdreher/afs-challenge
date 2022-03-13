@@ -6,14 +6,16 @@
       <input v-model="searchTerms" />
     </label>
     <div>
-      <button class="edit-btn" @click="updateTransfers">
+      <button class="edit-btn btn btn-primary" @click="updateTransfers">
         Update transfers
       </button>
-      <transfer-row
-        :key="transfer.transactionIdentifier"
-        v-for="transfer in searchedTransfers"
-        :transfer="transfer"
-      />
+      <div class="transfers-container">
+        <transfer-row
+          :key="transfer.transactionIdentifier"
+          v-for="transfer in searchedTransfers"
+          :transfer="transfer"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -50,13 +52,6 @@ export default class Transfers extends Vue {
   }
 
   updateTransfers(): void {
-    this.transfers.forEach((transfer) => {
-      const number = `Important data: ${(Math.random() * 100000000)
-        .toString()
-        .slice(1, 8)}`;
-      transfer.forgottenProperty = number;
-    });
-
     this.transfers[0] = {
       splitFactor: null,
       exDate: null,
@@ -68,6 +63,8 @@ export default class Transfers extends Vue {
       securityClassId: "ab983cfe-a932-4e25-98ea-f5928a839fe1",
       securityClass: { name: "Common" },
       state: "OLD",
+      fromSecurityHolderId: "dd971e7f-386b-45dd-93e1-666fbeed0a55",
+      fromSecurityHolder: "From Security Holder",
       toSecurityHolderId: "dd971e7f-386b-45dd-93e1-666fbeed0a55",
       toSecurityHolder: {
         fullName: "Jeff Dunlap",
@@ -77,11 +74,26 @@ export default class Transfers extends Vue {
       positionWithinDay: 3,
       type: "ISSUE_STOCK",
     };
+
+    this.transfers = this.transfers.map((transfer: Transaction) => {
+      const number = `Important data: ${(Math.random() * 100000000)
+        .toString()
+        .slice(1, 8)}`;
+      return {
+        ...transfer,
+        forgottenProperty: number,
+      };
+    });
   }
 }
 </script>
 <style scoped lang="scss">
 .edit-btn {
   margin: 2rem;
+}
+
+.transfers-container {
+  padding: 1rem 0;
+  background-color: #535a74;
 }
 </style>
