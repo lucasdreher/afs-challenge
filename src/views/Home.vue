@@ -6,86 +6,78 @@
     </button>
 
     <!-- modal form -->
-    <Teleport to="body">
-      <!-- use the modal component, pass in the prop -->
-      <modal :show="showModal" :reset="formReset" @close="showModal = false">
-        <template #header>
-          <h2>New security class</h2>
-        </template>
-        <template #body>
-          <form
-            id="addSecurityClassName"
-            @submit.prevent="addSecurityClassName"
-          >
-            <label for="securityClassName">Security class name</label>
-            <input
-              id="securityClassName"
-              v-model="securityClassNameValue"
-              placeholder="Name"
-              type="text"
-              required
-            />
+    <modal :show="showModal" :reset="formReset" @close="showModal = false">
+      <template #header>
+        <h2>New security class</h2>
+      </template>
+      <template #body>
+        <form id="addSecurityClassName" @submit.prevent="addSecurityClassName">
+          <label for="securityClassName">Security class name</label>
+          <input
+            id="securityClassName"
+            v-model="securityClassNameValue"
+            placeholder="Name"
+            type="text"
+            required
+          />
 
-            <label for="nominalValue">Nominal Value</label>
-            <input
-              id="nominalValue"
-              v-model="nominalValueValue"
-              placeholder="Amount"
-              type="number"
-              required
-            />
+          <label for="nominalValue">Nominal Value</label>
+          <input
+            id="nominalValue"
+            v-model="nominalValueValue"
+            placeholder="Amount"
+            type="number"
+            required
+          />
 
-            <label for="authorizedAmount">Authorized amount</label>
-            <input
-              id="authorizedAmount"
-              v-model="authorizedAmountValue"
-              placeholder="Amount"
-              type="number"
-              required
-            />
+          <label for="authorizedAmount">Authorized amount</label>
+          <input
+            id="authorizedAmount"
+            v-model="authorizedAmountValue"
+            placeholder="Amount"
+            type="number"
+            required
+          />
 
-            <label for="issuedAmount">Issued amount</label>
-            <input
-              id="issuedAmount"
-              v-model="issuedAmountValue"
-              placeholder="Amount"
-              type="number"
-              required
-            />
+          <label for="issuedAmount">Issued amount</label>
+          <input
+            id="issuedAmount"
+            v-model="issuedAmountValue"
+            placeholder="Amount"
+            type="number"
+            required
+          />
 
-            <label for="authorizedCapital">Authorized Capital</label>
-            <input
-              id="authorizedCapital"
-              v-model="authorizedCapitalValue"
-              placeholder="Amount"
-              type="number"
-              required
-            />
+          <label for="authorizedCapital">Authorized Capital</label>
+          <input
+            id="authorizedCapital"
+            v-model="authorizedCapitalValue"
+            placeholder="Amount"
+            type="number"
+            required
+          />
 
-            <label for="issuedCapital">Issued capital</label>
-            <input
-              id="issuedCapital"
-              v-model="issuedCapitalValue"
-              placeholder="Amount"
-              type="number"
-              required
-            />
-          </form>
-        </template>
-        <template #footer>
-          <button
-            class="btn btn-primary"
-            type="submit"
-            form="addSecurityClassName"
-          >
-            Submit
-          </button>
-          <button class="btn btn-primary-ghost" @click="formReset">
-            Cancel
-          </button>
-        </template>
-      </modal>
-    </Teleport>
+          <label for="issuedCapital">Issued capital</label>
+          <input
+            id="issuedCapital"
+            v-model="issuedCapitalValue"
+            placeholder="Amount"
+            type="number"
+            required
+          />
+        </form>
+      </template>
+      <template #footer>
+        <button
+          class="btn btn-primary"
+          type="submit"
+          form="addSecurityClassName"
+        >
+          Submit
+        </button>
+        <button class="btn btn-primary-ghost" @click="formReset">Cancel</button>
+      </template>
+    </modal>
 
     <h1>This is a table with some important data</h1>
     <b-table :data="tableData" :columns="columns"></b-table>
@@ -96,8 +88,6 @@
 import { Component, Vue } from "vue-property-decorator";
 import { TableData } from "@/types/types";
 import Modal from "@/components/Modal.vue";
-// import AddSecurityClass from "@/components/AddSecurityClass/AddSecurityClass.vue";
-// import  from "@/components/AddSecurityClassForm.vue";
 
 const //helper get totals
   getTotals = (data: TableData[]) => {
@@ -153,8 +143,8 @@ const //helper get totals
   },
   methods: {
     formReset() {
-      console.log("form reseted");
       this.securityClassNameValue = "";
+      this.nominalValueValue = null;
       this.authorizedAmountValue = null;
       this.issuedAmountValue = null;
       this.authorizedCapitalValue = null;
@@ -164,6 +154,7 @@ const //helper get totals
     addSecurityClassName() {
       if (
         !this.securityClassNameValue ||
+        !this.nominalValueValue ||
         !this.authorizedAmountValue ||
         !this.issuedAmountValue ||
         !this.authorizedCapitalValue ||
