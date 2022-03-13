@@ -95,5 +95,6 @@ export default class Transfers extends Vue {
 .transfers-container {
   padding: 1rem 0;
   background-color: #535a74;
+  min-height: 71vh;
 }
 </style>
