@@ -4,6 +4,7 @@
     <p>Type: {{ transfer.type }}</p>
     <p class="transfer-row__state">State: {{ transfer.state }}</p>
     <p>Amount: {{ transfer.amount }}</p>
+    <p>Record Date: {{ transfer.recordDate }}</p>
     <span v-if="transfer.forgottenProperty">{{
       transfer.forgottenProperty
     }}</span>
