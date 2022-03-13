@@ -1,19 +1,22 @@
 <template>
   <div class="home">
-    <button id="show-modal" @click="showModal = true">
+    <!-- button call modal form -->
+    <button id="show-modal" class="btn btn-primary" @click="showModal = true">
       Add new security class
     </button>
-    <h1>This is a table with some important data</h1>
-    <b-table :data="tableData" :columns="columns"></b-table>
 
+    <!-- modal form -->
     <Teleport to="body">
       <!-- use the modal component, pass in the prop -->
-      <modal :show="showModal" @close="showModal = false">
+      <modal :show="showModal" :reset="formReset" @close="showModal = false">
         <template #header>
           <h2>New security class</h2>
         </template>
         <template #body>
-          <form ref="newSecurityClassForm">
+          <form
+            id="addSecurityClassName"
+            @submit.prevent="addSecurityClassName"
+          >
             <label for="securityClassName">Security class name</label>
             <input
               id="securityClassName"
@@ -35,7 +38,7 @@
             <label for="authorizedAmount">Authorized amount</label>
             <input
               id="authorizedAmount"
-              v-model="nominalValueValue"
+              v-model="authorizedAmountValue"
               placeholder="Amount"
               type="number"
               required
@@ -44,7 +47,7 @@
             <label for="issuedAmount">Issued amount</label>
             <input
               id="issuedAmount"
-              v-model="nominalValueValue"
+              v-model="issuedAmountValue"
               placeholder="Amount"
               type="number"
               required
@@ -53,7 +56,7 @@
             <label for="authorizedCapital">Authorized Capital</label>
             <input
               id="authorizedCapital"
-              v-model="nominalValueValue"
+              v-model="authorizedCapitalValue"
               placeholder="Amount"
               type="number"
               required
@@ -62,16 +65,30 @@
             <label for="issuedCapital">Issued capital</label>
             <input
               id="issuedCapital"
-              v-model="nominalValueValue"
+              v-model="issuedCapitalValue"
               placeholder="Amount"
               type="number"
               required
             />
-            <button type="submit">Submit</button>
           </form>
+        </template>
+        <template #footer>
+          <button
+            class="btn btn-primary"
+            type="submit"
+            form="addSecurityClassName"
+          >
+            Submit
+          </button>
+          <button class="btn btn-primary-ghost" @click="formReset">
+            Cancel
+          </button>
         </template>
       </modal>
     </Teleport>
+
+    <h1>This is a table with some important data</h1>
+    <b-table :data="tableData" :columns="columns"></b-table>
   </div>
 </template>
 
@@ -79,6 +96,8 @@
 import { Component, Vue } from "vue-property-decorator";
 import { TableData } from "@/types/types";
 import Modal from "@/components/Modal.vue";
+// import AddSecurityClass from "@/components/AddSecurityClass/AddSecurityClass.vue";
+// import  from "@/components/AddSecurityClassForm.vue";
 
 const //helper get totals
   getTotals = (data: TableData[]) => {
@@ -97,19 +116,19 @@ const //helper get totals
       for (let [key, value] of Object.entries(row)) {
         switch (key) {
           case "nominalValue":
-            totalRow[key] += value;
+            totalRow[key] += parseInt(value);
             break;
           case "authorizedAmount":
-            totalRow[key] += value;
+            totalRow[key] += parseInt(value);
             break;
           case "issuedAmount":
-            totalRow[key] += value;
+            totalRow[key] += parseInt(value);
             break;
           case "authorizedCapital":
-            totalRow[key] += value;
+            totalRow[key] += parseInt(value);
             break;
           case "issuedCapital":
-            totalRow[key] += value;
+            totalRow[key] += parseInt(value);
             break;
         }
       }
@@ -124,7 +143,52 @@ const //helper get totals
   data() {
     return {
       showModal: false,
+      securityClassNameValue: "",
+      nominalValueValue: null,
+      authorizedAmountValue: null,
+      issuedAmountValue: null,
+      authorizedCapitalValue: null,
+      issuedCapitalValue: null,
     };
+  },
+  methods: {
+    formReset() {
+      console.log("form reseted");
+      this.securityClassNameValue = "";
+      this.authorizedAmountValue = null;
+      this.issuedAmountValue = null;
+      this.authorizedCapitalValue = null;
+      this.issuedCapitalValue = null;
+      this.showModal = false;
+    },
+    addSecurityClassName() {
+      if (
+        !this.securityClassNameValue ||
+        !this.authorizedAmountValue ||
+        !this.issuedAmountValue ||
+        !this.authorizedCapitalValue ||
+        !this.issuedCapitalValue
+      ) {
+        console.log("missing input");
+        return;
+      }
+
+      const newSecurityClass: TableData = {
+        id: "fd78c11b-e3d2-455a-99b0-49907a75c463",
+        name: this.securityClassNameValue,
+        nominalValue: 1,
+        authorizedAmount: this.authorizedAmountValue,
+        issuedAmount: this.issuedAmountValue,
+        authorizedCapital: this.authorizedCapitalValue,
+        issuedCapital: this.issuedCapitalValue,
+        randomNumber: Math.random(),
+      };
+
+      this.tableData.splice(this.tableData.length - 1, 1, newSecurityClass);
+      this.tableData = getTotals(this.tableData);
+
+      this.formReset();
+    },
   },
 })
 export default class Home extends Vue {
@@ -182,7 +246,7 @@ export default class Home extends Vue {
   async getData(): Promise<TableData[]> {
     return [
       {
-        id: "42f2462d-49d0-4e91-8fe1-de2e656b0f06",
+        id: "42f2462d-49d0-4e91-8fe1-de2e656b0f04",
         name: "Series A",
         nominalValue: 5,
         authorizedAmount: 1500,
@@ -221,3 +285,30 @@ export default class Home extends Vue {
   }
 }
 </script>
+
+<style scoped lang="scss">
+h1 {
+  margin: 1rem auto 0.5rem;
+}
+
+.modal-container {
+  form {
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: auto auto;
+    row-gap: 0.6rem;
+  }
+
+  label {
+    text-align: left;
+  }
+
+  input {
+    width: 100%;
+  }
+
+  .btn-primary {
+    margin-right: 0.5rem;
+  }
+}
+</style>

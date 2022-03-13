@@ -2,6 +2,7 @@
 export default {
   props: {
     show: Boolean,
+    reset: Function,
   },
 };
 </script>
@@ -25,6 +26,7 @@ export default {
             </slot>
           </div>
         </div>
+        <div class="modal-mask-close" @click="reset"></div>
       </div>
     </div>
   </Transition>
@@ -43,24 +45,26 @@ export default {
   transition: opacity 0.3s ease;
 }
 
+.modal-mask-close {
+  position: absolute;
+  inset: 0;
+}
+
 .modal-wrapper {
   display: table-cell;
   vertical-align: middle;
 }
 
 .modal-container {
-  max-width: 300px;
+  position: relative;
+  z-index: 2;
+  max-width: 400px;
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #fff;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
-}
-
-label,
-input {
-  display: block;
 }
 
 .modal-container input {
